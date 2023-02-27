@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;0,900;1,100;1,400;1,700;1,900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+body{
+    background: rgb(223, 220, 220);
+    position: relative;
+}
+.tool-error-border{
+    border: 2px solid red;
+}
+
+.project-content{
+    padding: 10px;
+}
+
+.project-heading{
+    text-align: center;
+    margin-top: 20px;
+    font-size: 30px;
+}
+.tool-error-message{
+    display: block;
+    color: red;
+    font-size: 11px;
+    font-style: italic;
+    font-weight: 800;
+    margin: 5px 0 0 5px;
+    position: absolute;
+    bottom: -15px;
+    left: 0px;
+}
+
+#update ,#selectedID{
+    display: none;
+}
+.btn{
+  display: block;
+  border: none;
+  background-color: rgb(0, 128, 0);
+  color: rgb(255, 255, 255);
+  margin: 0 auto;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  min-width: 65px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.modal-buttons{
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 3px;
+    transition: .4s;
+    background: green;
+}
+#modalContainer{
+    height: 100vh;
+    width: 100%;
+    display: none;
+    position: fixed;
+    top: 0;
+}
+.modalContainer{
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(0, 0, 0, .5);
+    transition: .4s;
+}
+.modal-box{
+    width: 500px;
+    padding: 10px;
+    padding-top: 30px;
+    background: rgb(240, 240, 228);
+    box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
+    position: relative;
+}
+.modal-box h2{
+    font-size: 35px;
+    font-weight: 700;
+    font-style: italic;
+    text-align: center;
+}
+#closeModal{
+    padding: 12px 15px 0 0;
+    border: none;
+    background: transparent;
+    outline: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#closeModal i{
+    cursor: pointer;
+    font-size: 25px;
+    transition: .2s;
+}
+#closeModal i:hover{    
+    color: red;
+}
+.modal-input-items{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 5px;
+}
+.modal-input-label{
+    font-size: 25px;
+    margin: 5px;
+}
+.modal-input{
+    height: 40px;
+    width: 100%;
+    background-color: rgba(240, 248, 255, 0.569);
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 5px;
+    outline: none;
+    font-size: 20px;
+}
+#save, #update{
+    background-color: rgb(0, 128, 0, .8);
+    margin: 0;
+    margin-top: 20px;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    letter-spacing: 1px;
+}
+#modal-save:hover{
+    background-color: rgba(0, 128, 0, 1);
+}
+#localStorageEmptyMessage{
+    text-align: center;
+    margin-top: 20px;
+    font-size: 25px;
+}
+.user-content{
+    position: relative;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    width: 50%;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: rgb(255, 255, 255);;
+}
+.body-heading-buttons{
+  display: flex;
+}
+.body-heading{
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.data-table table{
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table table thead tr th,td{
+  height: 40px;
+  padding: 5px;
+  border: 1px solid black;
+}
+#userTableBody tr td:last-child{
+    text-align: center;
+}
+#userTableBody tr td:nth-last-child(2){
+    text-align: center;
+}
+#userTableBody tr td:first-child{
+    text-align: center;
+}
+.btn-bookmark-delete{
+    display: inline;
+    background-color: rgb(162, 66, 66);
+    color: rgb(255, 255, 255);;
+}
+.btn-bookmark-update{
+    display: inline;
+    background-color: rgb(44, 87, 172);
+    color: rgb(255, 255, 255);;
+}
+.modal-input-items{
+    position: relative;
+}
