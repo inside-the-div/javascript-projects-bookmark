@@ -35,9 +35,13 @@ $(document).ready(function(){
                 bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
                 var lastIndexOfArray = bookmarkJson.bookmarks.length-1;
                 bookmarkId = Number(bookmarkJson.bookmarks[lastIndexOfArray].id) + 1;
-                bookmarkJson.bookmarks.push({"id":bookmarkId,
-                "name":name,
-                "link":link});
+                bookmarkJson.bookmarks.push(
+                    {
+                        "id":bookmarkId,
+                        "name":name,
+                        "link":link
+                    }
+                );
             }
     
             localStorage.setItem("bookmark_data", JSON.stringify(bookmarkJson));
@@ -52,11 +56,12 @@ $(document).ready(function(){
     });
     
     $(document).on("click",".btn-bookmark-delete",function(){
-        if (confirm("Are you sure! want to delete?") == true) 
+        if (confirm("Are you sure, want to delete?") == true) 
         {
             var bookmarkId = ($(this).attr('data-bookmarkId'));
             var indexNumber;
             var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
+
             for(var i = 0 ;i < bookmarkJson.bookmarks.length; i++)
             {
                 if(bookmarkJson.bookmarks[i].id == bookmarkId)
@@ -75,9 +80,11 @@ $(document).ready(function(){
         
         $("#modalHeading").html("Edit Bookmark");
         $("#bookmarkModal").fadeIn();
+
         var bookmarkId = ($(this).attr('data-bookmarkId'));
         var indexNumber;
         var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
+
         for(var i = 0 ;i < bookmarkJson.bookmarks.length; i++)
         {
             if(bookmarkJson.bookmarks[i].id == bookmarkId)
@@ -86,6 +93,7 @@ $(document).ready(function(){
                 break;
             }
         }
+
         $("#name").val(bookmarkJson.bookmarks[indexNumber].name);
         $("#link").val(bookmarkJson.bookmarks[indexNumber].link);
         $("#bookmarkId").html(bookmarkJson.bookmarks[indexNumber].id);
@@ -99,7 +107,7 @@ $(document).ready(function(){
         
         if(IsValidBookmarkInput("update"))
         {
-            if (confirm("Are your sure! want to update?") == true) 
+            if (confirm("Are your sure, want to update?") == true) 
             {
                 var bookmarkId = Number($("#bookmarkId").text());
                 var indexNumber;
@@ -133,14 +141,12 @@ $(document).ready(function(){
 });
 //end jquery
 
-
-
-
 function IsValidBookmarkInput(action){
+    _cmnRemoveAllErrorMessage();
+    
     var name = $("#name").val();
     var link = $("#link").val();
     var total_link;
-    _cmnRemoveAllErrorMessage();
 
     if(JSON.parse(localStorage.getItem("bookmark_data")) != null){
         existingBookmarksArray = JSON.parse(localStorage.getItem("bookmark_data")).bookmarks;
@@ -223,34 +229,30 @@ function ClearModal(){
 }
 
 function ShowBookmarkData(){
-    var bookmark_data = JSON.parse(localStorage.getItem("bookmark_data"));
-    var totalUser = bookmark_data.bookmarks.length;
-    var usertablerow = "";
+    var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
+    var totalUser = bookmarkJson.bookmarks.length;
+    var userTableRow = "";
     if(localStorage.getItem("bookmark_data") != null)
     {            
         for(var i = 0; i < totalUser; i++)
         {
-            usertablerow += 
+            userTableRow += 
             `<tr>
-                <td>${bookmark_data.bookmarks[i].id}</td>
-                <td>${bookmark_data.bookmarks[i].name}</td>
-                <td>${bookmark_data.bookmarks[i].link}</td> 
+                <td>${bookmarkJson.bookmarks[i].id}</td>
+                <td>${bookmarkJson.bookmarks[i].name}</td>
+                <td>${bookmarkJson.bookmarks[i].link}</td> 
                 <td> 
-                    <button data-bookmarkId = "${bookmark_data.bookmarks[i].id}" class="btn btn-bookmark-delete">Delete</button> 
-                    <button data-bookmarkId = "${bookmark_data.bookmarks[i].id}" class="btn-bookmark-edit btn">Edit</button> 
+                    <button data-bookmarkId = "${bookmarkJson.bookmarks[i].id}" class="btn btn-bookmark-delete">Delete</button> 
+                    <button data-bookmarkId = "${bookmarkJson.bookmarks[i].id}" class="btn-bookmark-edit btn">Edit</button> 
                 </td> 
             </tr>`;
         }
-        
-        $("#userTableBody").html(usertablerow);
-        if($("#userTableBody").text() == "")
-        {
-            $("#localStorageEmptyMessage").show(); 
-        }
-        else{
-            $("#localStorageEmptyMessage").hide(); 
-        }
-    }        
+        $("#userTableBody").html(userTableRow);
+    }
+    else
+    {
+        $("#localStorageEmptyMessage").show(); 
+    }       
 }
 
 function CloseBookmarkModal()
