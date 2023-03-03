@@ -230,11 +230,11 @@ function ClearModal(){
 
 function ShowBookmarkData(){
     var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
-    var totalUser = bookmarkJson.bookmarks.length;
+    var totalbookmark = bookmarkJson.bookmarks.length;
     var bookmarkTableRow = "";
     if(localStorage.getItem("bookmark_data") != null)
     {            
-        for(var i = 0; i < totalUser; i++)
+        for(var i = 0; i < totalbookmark; i++)
         {
             bookmarkTableRow += 
             `<tr>
