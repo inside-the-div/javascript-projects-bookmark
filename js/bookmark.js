@@ -231,12 +231,12 @@ function ClearModal(){
 function ShowBookmarkData(){
     var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
     var totalUser = bookmarkJson.bookmarks.length;
-    var userTableRow = "";
+    var bookmarkTableRow = "";
     if(localStorage.getItem("bookmark_data") != null)
     {            
         for(var i = 0; i < totalUser; i++)
         {
-            userTableRow += 
+            bookmarkTableRow += 
             `<tr>
                 <td>${bookmarkJson.bookmarks[i].id}</td>
                 <td>${bookmarkJson.bookmarks[i].name}</td>
@@ -247,7 +247,7 @@ function ShowBookmarkData(){
                 </td> 
             </tr>`;
         }
-        $("#userTableBody").html(userTableRow);
+        $("#bookmarkTableBody").html(bookmarkTableRow);
     }
     else
     {

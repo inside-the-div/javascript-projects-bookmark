@@ -146,7 +146,7 @@ body{
     margin-top: 20px;
     font-size: 25px;
 }
-.user-content{
+.bookmark-content{
     position: relative;
     overflow-y: scroll;
     display: flex;
@@ -174,13 +174,13 @@ body{
   padding: 5px;
   border: 1px solid black;
 }
-#userTableBody tr td:last-child{
+#bookmarkTableBody tr td:last-child{
     text-align: center;
 }
-#userTableBody tr td:nth-last-child(2){
+#bookmarkTableBody tr td:nth-last-child(2){
     text-align: center;
 }
-#userTableBody tr td:first-child{
+#bookmarkTableBody tr td:first-child{
     text-align: center;
 }
 .btn-bookmark-delete{
