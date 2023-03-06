@@ -5,14 +5,16 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
-body{
-    background: rgb(223, 220, 220);
-    position: relative;
-}
+
 .tool-error-border{
     border: 2px solid red;
+    position: relative;
 }
-
+#searchBookMark{
+    margin: 0 0 0 5px;
+    outline: none;
+    padding: 5px;
+}
 .project-content{
     padding: 10px;
 }
@@ -142,6 +144,7 @@ body{
     background-color: rgba(0, 128, 0, 1);
 }
 #localStorageEmptyMessage{
+    display: none;
     text-align: center;
     margin-top: 20px;
     font-size: 25px;

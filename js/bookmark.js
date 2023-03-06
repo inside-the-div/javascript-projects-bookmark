@@ -1,7 +1,7 @@
 $(document).ready(function(){
    if(localStorage.getItem("bookmark_data") != null)
    {
-        ShowBookmarkData();    
+        ShowBookmarkData();
    }
     
     $(document).on("click","#OpenBookmarkAddModal",OpenBookmarkAddModal);
@@ -114,7 +114,6 @@ $(document).ready(function(){
                 var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
                 for(var i = 0 ;i < bookmarkJson.bookmarks.length; i++)
                 {
-                    console.log(bookmarkId);
                     if(Number(bookmarkJson.bookmarks[i].id) == bookmarkId)
                     {
                         indexNumber = i;
@@ -138,6 +137,45 @@ $(document).ready(function(){
         }
     });
 
+    $("#searchBookMark").keyup(function(){
+        var searchText = $("#searchBookMark").val();
+        searchText = searchText.replace(/\s{2,}/g, ' ').trim();
+        searchText = searchText.toLowerCase();
+    
+        if(searchText == "")
+        {
+            ShowBookmarkData();
+        }
+        else
+        {
+            var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
+            var totalBookmark = bookmarkJson.bookmarks.length;
+            var bookmarkTableRow = "";
+            if(bookmarkJson != null)
+            {            
+                for(var i = 0; i < totalBookmark; i++)
+                {
+                    var bookmarkName = bookmarkJson.bookmarks[i].name;
+                    bookmarkName = bookmarkName.toLowerCase();
+                    if(bookmarkName.indexOf(searchText) > -1)
+                    {   
+                        console.log(bookmarkName.indexOf(searchText) > -1) ;                    
+                        bookmarkTableRow += 
+                        `<tr>
+                            <td>${bookmarkJson.bookmarks[i].id}</td>
+                            <td>${bookmarkJson.bookmarks[i].name}</td>
+                            <td>${bookmarkJson.bookmarks[i].link}</td> 
+                            <td> 
+                                <button data-bookmarkId = "${bookmarkJson.bookmarks[i].id}" class="btn btn-bookmark-delete">Delete</button> 
+                                <button data-bookmarkId = "${bookmarkJson.bookmarks[i].id}" class="btn-bookmark-edit btn">Edit</button> 
+                            </td> 
+                        </tr>`;                       
+                    }
+                }
+            }
+            $("#bookmarkTableBody").html(bookmarkTableRow);
+        }
+    });
 });
 //end jquery
 
