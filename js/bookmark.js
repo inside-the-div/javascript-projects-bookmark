@@ -158,8 +158,7 @@ $(document).ready(function(){
                     var bookmarkName = bookmarkJson.bookmarks[i].name;
                     bookmarkName = bookmarkName.toLowerCase();
                     if(bookmarkName.indexOf(searchText) > -1)
-                    {   
-                        console.log(bookmarkName.indexOf(searchText) > -1) ;                    
+                    {                
                         bookmarkTableRow += 
                         `<tr>
                             <td>${bookmarkJson.bookmarks[i].id}</td>
