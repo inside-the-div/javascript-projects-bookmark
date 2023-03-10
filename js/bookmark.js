@@ -14,10 +14,11 @@ $(document).ready(function(){
     
         if(IsValidBookmarkInput("add"))
         {
-            var bookmarkId = 1;
+            var bookmarkId;
             var bookmarkJson;
             if(localStorage.getItem("bookmark_data") == null || JSON.parse(localStorage.getItem("bookmark_data")).bookmarks.length == 0)
             {
+                bookmarkId = 1;
                 var bookmarks = [];
                 bookmarks.push(         
                 {
