@@ -7,17 +7,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="css/bookmark.css">
 
-    <title>Bookmarks Management System</title>
+    <title>Bookmarks App</title>
 </head>
 <body>
     <div class="project-content">
-        <h1 class="project-heading">Bookmarks Management System | Javascript Local Storage Project</h1>
+        <h1 class="project-heading">Bookmarks App | Javascript Local Storage Project</h1> <br><br>
         <div class="bookmark-content">
             <div class="body-heading">
                 <h2>All Bookmarks</h2>
                 <div class="body-heading-buttons">
-                    <button id="OpenBookmarkAddModal" class="btn">Add</button>
-                    <input id="searchBookMark" type="text" placeholder="Search">
+                    <button id="addBtn" class="btn">Add</button>
+                    <input id="searchBookmark" type="text" placeholder="Search">
                 </div>                   
             </div>
 
@@ -27,27 +27,36 @@
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
-                        <th>Link</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody id="bookmarkTableBody">
-                    
+
+                    <!-- <tr>
+                        <td>1</td>
+                        <td><a href="url">Name</a></td>
+                        <td> 
+                            <button data-bookmarkId="1" class="btn delete-btn">Delete</button> 
+                            <button data-bookmarkId="1" class="btn edit-btn">Edit</button> 
+                        </td> 
+                    </tr> -->
+
                     </tbody>
                 </table>
             </div>
         </div>
-        <p id="localStorageEmptyMessage">Your storage is empty now. Add some data.</p>
+        <p id="noBookmarkFound">No Bookmark found.</p>
     </div>
     
     <div id="bookmarkModal">
         <div class="bookmarkModal">
             <div class="modal-box">
-                <button id="closeModal">
+                <button id="closeModalBtn">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <h2><span id="modalHeading"></span></h2>
-                <div id="selectedID">
+                <!-- we will show this div only for edit -->
+                <div id="selectedIdDiv">
                     <div class="modal-input-items">
                     <label class="modal-input-label">
                             ID: <span id="bookmarkId"></span>
@@ -55,21 +64,21 @@
                     </div>
                 </div>
                 <div class="modal-input-items">                   
-                    <label class="modal-input-label">
+                    <label for="siteName" class="modal-input-label">
                         Name:
                     </label>
-                    <input class="modal-input" id="name" type="text" aria-label="Name" class="form-control">
+                    <input class="modal-input" id="siteName" type="text" class="form-control">
                 </div>
                 <div class="modal-input-items">
-                    <label class="modal-input-label">
-                        Link:
+                    <label for="siteURL" class="modal-input-label">
+                        URL:
                     </label>
-                    <input class="modal-input" id="link" type="text" aria-label="Age" class="form-control">
+                    <input class="modal-input" id="siteURL" type="text" class="form-control">
                 </div>
                 
                 <div class="modal-input-items">
-                    <button id="saveBookmark" class="modal-buttons">Save</button>
-                    <button id="updateBookmark" class="modal-buttons">Update</button>
+                    <button id="saveBtn" class="modal-buttons">Save</button>
+                    <button id="updateBtn" class="modal-buttons">Update</button>
                 </div>                    
             </div>
         </div>

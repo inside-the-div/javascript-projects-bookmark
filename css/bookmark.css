@@ -7,10 +7,10 @@
 }
 
 .tool-error-border{
-    border: 2px solid red;
-    position: relative;
+    border: 2px solid red !important;
+    position: relative !important;
 }
-#searchBookMark{
+#searchBookmark{
     margin: 0 0 0 5px;
     outline: none;
     padding: 5px;
@@ -36,7 +36,7 @@
     left: 0px;
 }
 
-#updateBookmark ,#selectedID{
+#updateBookmark ,#selectedIdDiv{
     display: none;
 }
 .btn{
@@ -94,7 +94,7 @@
     font-style: italic;
     text-align: center;
 }
-#closeModal{
+#closeModalBtn{
     padding: 12px 15px 0 0;
     border: none;
     background: transparent;
@@ -104,12 +104,12 @@
     right: 0;
 }
 
-#closeModal i{
+#closeModalBtn i{
     cursor: pointer;
     font-size: 25px;
     transition: .2s;
 }
-#closeModal i:hover{    
+#closeModalBtn i:hover{    
     color: red;
 }
 .modal-input-items{
@@ -132,7 +132,7 @@
     outline: none;
     font-size: 20px;
 }
-#saveBookmark, #updateBookmark{
+#saveBtn, #updateBtn{
     background-color: rgb(0, 128, 0, .8);
     margin: 0;
     margin-top: 20px;
@@ -143,7 +143,7 @@
 #modal-save:hover{
     background-color: rgba(0, 128, 0, 1);
 }
-#localStorageEmptyMessage{
+#noBookmarkFound{
     display: none;
     text-align: center;
     margin-top: 20px;
@@ -186,12 +186,12 @@
 #bookmarkTableBody tr td:first-child{
     text-align: center;
 }
-.btn-bookmark-delete{
+.delete-btn{
     display: inline;
     background-color: rgb(162, 66, 66);
     color: rgb(255, 255, 255);;
 }
-.btn-bookmark-edit{
+.edit-btn{
     display: inline;
     background-color: rgb(44, 87, 172);
     color: rgb(255, 255, 255);;

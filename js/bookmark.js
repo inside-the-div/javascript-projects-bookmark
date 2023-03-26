@@ -1,309 +1,222 @@
 $(document).ready(function(){
-   if(localStorage.getItem("bookmark_data") != null)
-   {
-        ShowBookmarkData();
-   }
-    
-    $(document).on("click","#OpenBookmarkAddModal",OpenBookmarkAddModal);
-    $(document).on("click","#closeModal",CloseBookmarkModal);
+    var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+    ShowBookmarks(allBookmarks);
 
-    $(document).on("click","#saveBookmark",function(){
-       
-        var name = $("#name").val();
-        var link = $("#link").val();
-    
-        if(IsValidBookmarkInput("add"))
-        {
-            var bookmarkId;
-            var bookmarkJson;
-            if(localStorage.getItem("bookmark_data") == null || JSON.parse(localStorage.getItem("bookmark_data")).bookmarks.length == 0)
-            {
-                bookmarkId = 1;
-                var bookmarks = [];
-                bookmarks.push(         
-                {
-                    "id":bookmarkId,
-                    "name":name,
-                    "link":link
-                }
-                );
-                bookmarkJson ={
-                    "bookmarks" : bookmarks
-                }
-            }
-            else
-            {
-                bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
-                var lastIndexOfArray = bookmarkJson.bookmarks.length-1;
-                bookmarkId = Number(bookmarkJson.bookmarks[lastIndexOfArray].id) + 1;
-                bookmarkJson.bookmarks.push(
-                    {
-                        "id":bookmarkId,
-                        "name":name,
-                        "link":link
-                    }
-                );
-            }
-    
-            localStorage.setItem("bookmark_data", JSON.stringify(bookmarkJson));
-            
-            ShowBookmarkData();
-            ClearModal();
-        }
-        else{
-            return false;
-        }
-        
-    });
-    
-    $(document).on("click",".btn-bookmark-delete",function(){
-        if (confirm("Are you sure, want to delete?") == true) 
-        {
-            var bookmarkId = ($(this).attr('data-bookmarkId'));
-            var indexNumber;
-            var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
-
-            for(var i = 0 ;i < bookmarkJson.bookmarks.length; i++)
-            {
-                if(bookmarkJson.bookmarks[i].id == bookmarkId)
-                {
-                    indexNumber = i;
-                    break;
-                }
-            }
-            bookmarkJson.bookmarks.splice(indexNumber, 1);
-            localStorage.setItem("bookmark_data", JSON.stringify(bookmarkJson));
-            ShowBookmarkData();
-        } 
-    });
-
-    $(document).on("click",".btn-bookmark-edit",function () {
-        
-        $("#modalHeading").html("Edit Bookmark");
+    $("#addBtn").click(function(){
+        // just prepare and open the add modal
+        $("#modalHeading").html("Add Bookmark");
         $("#bookmarkModal").fadeIn();
+        $("#saveBtn").show();  
+        $("#updateBtn").hide();
+        $("#selectedIdDiv").fadeOut();
+    })
 
-        var bookmarkId = ($(this).attr('data-bookmarkId'));
-        var indexNumber;
-        var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
+    $("#saveBtn").click(function(){
+        var bookmarkId = generateBookmarkId();
+        var siteName = $("#siteName").val();
+        var siteURL = $("#siteURL").val();
 
-        for(var i = 0 ;i < bookmarkJson.bookmarks.length; i++)
-        {
-            if(bookmarkJson.bookmarks[i].id == bookmarkId)
-            {
-                indexNumber = i;
-                break;
-            }
+        var isValid = isValidBookmark(bookmarkId,siteName,siteURL);
+
+        if(isValid == true){
+
+            var bookmark = {
+                id: bookmarkId,
+                name: siteName,
+                url: siteURL
+            };
+
+            var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+            allBookmarks.push(bookmark);
+            localStorage.setItem('bookmarks', JSON.stringify(allBookmarks));
+            ShowBookmarks(allBookmarks);
+            $("#closeModalBtn").click();
         }
+    }) // end bookmark add
 
-        $("#name").val(bookmarkJson.bookmarks[indexNumber].name);
-        $("#link").val(bookmarkJson.bookmarks[indexNumber].link);
-        $("#bookmarkId").html(bookmarkJson.bookmarks[indexNumber].id);
 
-        $("#saveBookmark").hide();  
-        $("#updateBookmark").show();
-        $("#selectedID").show();      
+    // now update
+    $("#updateBtn").click(function(){
+        // get the data from edit modal 
+        var bookmarkId = Number($("#bookmarkId").text());
+        var newSiteName = $("#siteName").val();
+        var newSiteURL = $("#siteURL").val();
+
+        // but before update we need to validate
+        var isValid = isValidBookmark(bookmarkId,newSiteName,newSiteURL);
+
+        if(isValid == true){
+            var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+            var index = allBookmarks.findIndex(bookmark => bookmark.id === bookmarkId);
+
+            allBookmarks[index].name = newSiteName;
+            allBookmarks[index].url = newSiteURL;
+
+            localStorage.setItem("bookmarks",JSON.stringify(allBookmarks));
+            ShowBookmarks(allBookmarks);
+            $("#closeModalBtn").click();
+        }
+    }) // end update
+
+
+    // now search
+    $("#searchBookmark").keyup(function(){
+        var giveName = $(this).val().trim();
+
+        var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+        var matchingBookmark = allBookmarks.filter(function(bookmark){
+            return bookmark.name.toLowerCase().includes(giveName.toLowerCase());
+        })
+
+        ShowBookmarks(matchingBookmark);
+    }) // end search
+
+    // close modal
+    $("#closeModalBtn").click(function(){
+        $("#bookmarkModal").fadeOut();
+        $("#selectedIdDiv").fadeOut();
+        $("#siteName").val("");
+        $("#siteURL").val("");
+    })
+
+}) // end jquery
+
+
+// As edit and delete btn create dynamically
+$(document).on('click','.edit-btn',function(){
+    // prepare edit modal
+    $("#modalHeading").html("Edit Bookmark");
+    $("#bookmarkModal").fadeIn();
+    $("#saveBtn").hide();  
+    $("#updateBtn").show();
+
+    // get the id from button data attr.
+    var bookmarkId = Number($(this).attr('data-bookmarkId'));
+    
+    // search bookmark by this id
+    var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+    var bookmark = allBookmarks.find(function(bm){
+        return bm.id === bookmarkId;
     });
 
-    $(document).on("click","#updateBookmark",function(){
+    // show data in edit modal
+    $("#bookmarkId").html(bookmark.id);
+    $("#siteName").val(bookmark.name);
+    $("#siteURL").val(bookmark.url);
+    $("#selectedIdDiv").show();
+})
+// edit modal done
+
+
+// delete
+$(document).on('click','.delete-btn',function(){
+
+    //we need a confirmation
+    if(confirm("Are you sure want to delete?")){
+        // get the id from button data attr.
+        var bookmarkId = Number($(this).attr('data-bookmarkId'));
+        var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+        allBookmarks = allBookmarks.filter(function(bookmark){
+            return bookmark.id !== bookmarkId
+        })
         
-        if(IsValidBookmarkInput("update"))
-        {
-            if (confirm("Are your sure, want to update?") == true) 
-            {
-                var bookmarkId = Number($("#bookmarkId").text());
-                var indexNumber;
-                var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
-                for(var i = 0 ;i < bookmarkJson.bookmarks.length; i++)
-                {
-                    if(Number(bookmarkJson.bookmarks[i].id) == bookmarkId)
-                    {
-                        indexNumber = i;
-                        break;
-                    }
-                }
-                
-                bookmarkJson.bookmarks[indexNumber].name = $("#name").val();
-                bookmarkJson.bookmarks[indexNumber].link = $("#link").val();
+        // update all bookmarks in localstorage
+        localStorage.setItem('bookmarks',JSON.stringify(allBookmarks));
 
-                localStorage.setItem("bookmark_data", JSON.stringify(bookmarkJson));
-                
-                ShowBookmarkData();
-                CloseBookmarkModal();
-                
-            } 
-            else 
-            {
-                CloseBookmarkModal();
-            }
-        }
-    });
-
-    $("#searchBookMark").keyup(function(){
-        var searchText = $("#searchBookMark").val();
-        searchText = searchText.replace(/\s{2,}/g, ' ').trim();
-        searchText = searchText.toLowerCase();
+        // now you can show a meesage like 'delete success' 
+        ShowBookmarks(allBookmarks);
+    }
     
-        if(searchText == "")
-        {
-            ShowBookmarkData();
-        }
-        else
-        {
-            var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
-            var totalBookmark = bookmarkJson.bookmarks.length;
-            var bookmarkTableRow = "";
-            if(bookmarkJson != null)
-            {            
-                for(var i = 0; i < totalBookmark; i++)
-                {
-                    var bookmarkName = bookmarkJson.bookmarks[i].name;
-                    bookmarkName = bookmarkName.toLowerCase();
-                    if(bookmarkName.indexOf(searchText) > -1)
-                    {                
-                        bookmarkTableRow += 
-                        `<tr>
-                            <td>${bookmarkJson.bookmarks[i].id}</td>
-                            <td>${bookmarkJson.bookmarks[i].name}</td>
-                            <td>${bookmarkJson.bookmarks[i].link}</td> 
-                            <td> 
-                                <button data-bookmarkId = "${bookmarkJson.bookmarks[i].id}" class="btn btn-bookmark-delete">Delete</button> 
-                                <button data-bookmarkId = "${bookmarkJson.bookmarks[i].id}" class="btn-bookmark-edit btn">Edit</button> 
-                            </td> 
-                        </tr>`;                       
-                    }
-                }
-            }
-            $("#bookmarkTableBody").html(bookmarkTableRow);
-        }
-    });
-});
-//end jquery
+})
+// end delete
 
-function IsValidBookmarkInput(action){
+
+function isValidBookmark(bookmarkId,siteName,siteURL){
     _cmnRemoveAllErrorMessage();
-    
-    var name = $("#name").val();
-    var link = $("#link").val();
-    var total_link;
+    // Check if URL is valid
+    const urlRegex = /^https?:\/\/(.+)$/i;
+    var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
 
-    if(JSON.parse(localStorage.getItem("bookmark_data")) != null){
-        existingBookmarksArray = JSON.parse(localStorage.getItem("bookmark_data")).bookmarks;
-    }
-
-    if(action == "add")
+    if(bookmarkId == "")
     {
-        if(localStorage.getItem("bookmark_data") == null || existingBookmarksArray.length == 0)
-        {
-            total_link = 0;
-        }
-        else
-        {
-            for(var i = 0; i <existingBookmarksArray.length; i++)
-            {
-                var bookmarkLink = existingBookmarksArray[i].link;
-                if(bookmarkLink == link ){
-                    total_link = 1;
-                    break;
-                }
-            }
-        }
-    }
-    else
-    {
-        var updateId = Number($("#bookmarkId").text());
-        if(localStorage.getItem("bookmark_data") == null || existingBookmarksArray.length == 0)
-        {
-            total_link = 0;
-        }
-        else
-        {
-            for(var i = 0; i <existingBookmarksArray.length; i++)
-            {
-                var bookmarkLink = existingBookmarksArray[i].link;
-                var bookmarkId = Number(existingBookmarksArray[i].id);
-                if(bookmarkLink == link && bookmarkId != updateId){
-                    total_link = 1;
-                    break;
-                }
-            }
-        }
-    }
-
-    if(name == "")
-    {
-        _cmnShowErrorMessageBottomOfTheInputFiled("name","Feild can not be empty.");
+        alert("Something wrong! Bookmark ID not found!");
         return false;
     }
 
-    if(link == "")
+    if(siteName == "")
     {
-        _cmnShowErrorMessageBottomOfTheInputFiled("link","Feild can not be empty.");
+        _cmnShowErrorMessageBottomOfTheInputFiled("siteName","Site Name empty.");
+        return false;
+    }else if(siteName.length < 3){
+        // you can add your coustom message
+        _cmnShowErrorMessageBottomOfTheInputFiled("siteName","Not valid name.");
         return false;
     }
-    else if(link.length < 3)
+
+
+    if(siteURL == "")
     {
-        _cmnShowErrorMessageBottomOfTheInputFiled("link","Enter a valid link.");
+        _cmnShowErrorMessageBottomOfTheInputFiled("siteURL","Site URL empty.");
         return false;
-    }
-    else if(action == "update" && total_link > 0)
-    {
-        _cmnShowErrorMessageBottomOfTheInputFiled("link","This link already used. Enter valid link.");
-        return false; 
-    }
-    else if(action == "add" && total_link > 0)
-    {
-        _cmnShowErrorMessageBottomOfTheInputFiled("link","This link already used. Enter valid link.");
-        return false; 
+    }else if(siteURL.length < 3){
+        // you can add your coustom message
+        _cmnShowErrorMessageBottomOfTheInputFiled("siteURL","Not valid URL.");
+        return false;
+    }else if (!urlRegex.test(siteURL)) {
+        _cmnShowErrorMessageBottomOfTheInputFiled("siteURL","Not valid URL Format.");
+        return false;
+    }else if(allBookmarks.some(bookmark => bookmark.url === siteURL && bookmark.id !== bookmarkId)){
+        // also check if this url alreay exists or not
+        // remember for update bookmark siteURL is allow for the bookmarkId
+
+        _cmnShowErrorMessageBottomOfTheInputFiled("siteURL","Bookmark URL already exists.");
+        return false;
     }
 
     return true;
+
 }
 
-function ClearModal(){
-    $("#name").val("");
-    $("#link").val("");
-    $("#bookmarkId").html("");
-    _cmnRemoveAllErrorMessage();
+function generateBookmarkId(){
+    // get all bookmarks if it it null or empty assign an empty array
+    // also make it json
+    var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+
+    return allBookmarks.length + 1;
 }
 
-function ShowBookmarkData(){
-    var bookmarkJson = JSON.parse(localStorage.getItem("bookmark_data"));
-    var totalbookmark = bookmarkJson.bookmarks.length;
-    var bookmarkTableRow = "";
-    if(localStorage.getItem("bookmark_data") != null)
-    {            
-        for(var i = 0; i < totalbookmark; i++)
-        {
-            bookmarkTableRow += 
-            `<tr>
-                <td>${bookmarkJson.bookmarks[i].id}</td>
-                <td>${bookmarkJson.bookmarks[i].name}</td>
-                <td>${bookmarkJson.bookmarks[i].link}</td> 
-                <td> 
-                    <button data-bookmarkId = "${bookmarkJson.bookmarks[i].id}" class="btn btn-bookmark-delete">Delete</button> 
-                    <button data-bookmarkId = "${bookmarkJson.bookmarks[i].id}" class="btn-bookmark-edit btn">Edit</button> 
-                </td> 
-            </tr>`;
-        }
-        $("#bookmarkTableBody").html(bookmarkTableRow);
+
+function ShowBookmarks(allBookmarks) {
+
+    if(allBookmarks.length > 0){
+        // now we will show all bookmarks
+
+        var bookmarksTableRow = '';
+
+        allBookmarks.forEach(function(bookmark){
+            bookmarksTableRow += `
+
+                <tr>
+                    <td>${bookmark.id}</td>
+                    <td><a href="${bookmark.url}">${bookmark.name}</a></td>
+                    <td> 
+                        <button data-bookmarkId="${bookmark.id}" class="btn delete-btn">Delete</button> 
+                        <button data-bookmarkId="${bookmark.id}" class="btn edit-btn">Edit</button> 
+                    </td> 
+                </tr>
+
+            `;
+        })
+
+        // finally add all rows to the table body
+        $("#bookmarkTableBody").html(bookmarksTableRow);
+
+    }else{
+        // show no bookmark found
+        $("#bookmarkTableBody").html("");
+        $("#noBookmarkFound").show();
     }
-    else
-    {
-        $("#localStorageEmptyMessage").show(); 
-    }       
 }
 
-function CloseBookmarkModal()
-{
-    $("#bookmarkModal").fadeOut();     
-    $("#selectedID").fadeOut();
-    ClearModal();
-}
-
-function OpenBookmarkAddModal()
-{
-    $("#modalHeading").html("Add Bookmark");
-    $("#bookmarkModal").fadeIn();
-    $("#saveBookmark").show();  
-    $("#updateBookmark").hide();
-}
