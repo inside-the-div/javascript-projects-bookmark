@@ -176,15 +176,23 @@ function isValidBookmark(bookmarkId,siteName,siteURL){
     }
 
     return true;
-
 }
 
 function generateBookmarkId(){
     // get all bookmarks if it it null or empty assign an empty array
     // also make it json
     var allBookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+    var currentMaxBookmarkId = 0;
 
-    return allBookmarks.length + 1;
+    allBookmarks.forEach(function(bookmark){
+        if(bookmark.id > currentMaxBookmarkId){
+            currentMaxBookmarkId = bookmark.id;
+        }
+    })
+    
+    var NextBookmarkId = currentMaxBookmarkId + 1;
+
+    return NextBookmarkId;
 }
 
 
@@ -219,4 +227,3 @@ function ShowBookmarks(allBookmarks) {
         $("#noBookmarkFound").show();
     }
 }
-
